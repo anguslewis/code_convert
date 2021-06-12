@@ -138,19 +138,19 @@ else qui gen `_temp_iso3c'= `var'
 * process to option: convert from iso3c to specific format
 tempname crosswalk
 if "`todata'"!="iso3c" {
-  gen `todata'_country_code = ""
+  qui gen `todata'_country_code = ""
   file open `crosswalk' using "`path'/code_convert_`todata'.ado", read
   * read line, separate iso3c code from other code, run replace
   file read `crosswalk' line
   while r(eof)==0 {
     local cou_iso3c = substr("`line'",1,3)
     local cou_to = substr("`line'",5,.)
-    replace `todata'_country_code = "`cou_to'" if `_temp_iso3c' == "`cou_iso3c'"
+    qui replace `todata'_country_code = "`cou_to'" if `_temp_iso3c' == "`cou_iso3c'"
     file read `crosswalk' line
   }
   file close `crosswalk'
 }
-else gen `todata'_country_code = `_temp_iso3c'
+else qui gen `todata'_country_code = `_temp_iso3c'
 
 
 ********************************************************************************
