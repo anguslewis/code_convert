@@ -4,8 +4,8 @@ d 'code_convert': a program to efficiently convert common code formats.
 d
 d Distribution-Date: 20210612
 d
-f convert_convert.ado
-f convert_convert_country_long.ado
+f code_convert.ado
+f code_convert_country_long.ado
 f imfn.txt
 f iso2c.txt
 f sdc2_iso3c.txt
