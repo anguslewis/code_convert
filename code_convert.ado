@@ -39,9 +39,8 @@ else {
   local todata iso3c
 }
 
-* save path to code_convert folder
+* save path to code_convert crosswalk locations
 local path = "`c(sysdir_plus)'c"
-*local path = "C:\Users\ajl2282\Dropbox (CBS)\CBS\scripts\code_convert"
 
 
 ********************************************************************************
@@ -62,11 +61,11 @@ if "`marker'"!="" {
   }
 }
 * make sure to and from options are valid
-local file_names : dir "`path'" files "*.txt"
+local file_names : dir "`path'" files "*.ado"
 foreach option in to from {
   local `option'_test=0
   foreach file of local file_names {
-    if "``option'data'.txt" == "`file'" local `option'_test = 1
+    if "code_convert_``option'data'.ado" == "`file'" local `option'_test = 1
   }
   if "``option'data'"=="iso3c" local `option'_test = 1
 }
@@ -116,7 +115,7 @@ if "`fromdata'"=="country_long" {
 * process code convert option
 else if "`fromdata'"!="iso3c" {
   qui gen `_temp_iso3c'=""
-  file open `crosswalk' using "`path'/`fromdata'.txt", read
+  file open `crosswalk' using "`path'/code_convert_`fromdata'.ado", read
   * read line, separate iso3c code from other code, run replace
   file read `crosswalk' line
   while r(eof)==0 {
@@ -140,7 +139,7 @@ else qui gen `_temp_iso3c'= `var'
 tempname crosswalk
 if "`todata'"!="iso3c" {
   gen `todata'_country_code = ""
-  file open `crosswalk' using "`path'/`todata'.txt", read
+  file open `crosswalk' using "`path'/code_convert_`todata'.ado", read
   * read line, separate iso3c code from other code, run replace
   file read `crosswalk' line
   while r(eof)==0 {
