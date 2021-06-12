@@ -8,5 +8,4 @@ f code_convert.ado
 f code_convert_country_long.ado
 f code_convert_imfn.ado
 f code_convert_iso2c.ado
-f code_convert_sdc2_iso3c.ado
 f code_convert_sdcplatinum2c.ado
