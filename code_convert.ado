@@ -40,8 +40,8 @@ else {
 }
 
 * save path to code_convert folder
-local path = "`c(sysdir_plus)'c/code_convert"
-local path = "C:\Users\ajl2282\Dropbox (CBS)\CBS\scripts\code_convert"
+local path = "`c(sysdir_plus)'c"
+*local path = "C:\Users\ajl2282\Dropbox (CBS)\CBS\scripts\code_convert"
 
 
 ********************************************************************************
@@ -109,26 +109,26 @@ if "`fromdata'"=="`todata'" {
 tempvar _temp_iso3c
 tempname crosswalk
 * process country long options
-if "`fromdata'"!="country_long" {
-  gen `_temp_iso3c'=""
-  code_convert_country_long , from(`var') to(`_temp_iso3c')
+if "`fromdata'"=="country_long" {
+  qui gen `_temp_iso3c'=""
+  code_convert_country_long , from_cl(`var') to_cl(`_temp_iso3c')
 }
 * process code convert option
 else if "`fromdata'"!="iso3c" {
-  gen `_temp_iso3c'=""
+  qui gen `_temp_iso3c'=""
   file open `crosswalk' using "`path'/`fromdata'.txt", read
   * read line, separate iso3c code from other code, run replace
   file read `crosswalk' line
   while r(eof)==0 {
     local cou_iso3c = substr("`line'",1,3)
     local cou_from = substr("`line'",5,.)
-    replace `_temp_iso3c' = "`cou_iso3c'" if `var' == "`cou_from'"
+    qui replace `_temp_iso3c' = "`cou_iso3c'" if `var' == "`cou_from'"
     file read `crosswalk' line
   }
   file close `crosswalk'
 }
 * otherwise variable supplied is already iso3c
-else gen `_temp_iso3c'= `var'
+else qui gen `_temp_iso3c'= `var'
 
 
 ********************************************************************************
@@ -152,6 +152,19 @@ if "`todata'"!="iso3c" {
   file close `crosswalk'
 }
 else gen `todata'_country_code = `_temp_iso3c'
+
+
+********************************************************************************
+* TABULATE UNCONVERTED CODES
+********************************************************************************
+
+qui levelsof `var' if `todata'_country_code=="" , clean local(unconverted)
+if "`unconverted'"!="" {
+  di "{hline 58}"
+  di "The following codes were not converted."
+  di "{hline 58}"
+  tab `var' if `todata'_country_code==""
+}
 
 
 end
