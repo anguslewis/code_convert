@@ -1,0 +1,4 @@
+
+v 1.0
+d Angus Lewis , angus.j.lewis@gmail.com
+p 'scheme-clean': a Stata scheme
